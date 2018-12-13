@@ -1,0 +1,11 @@
+/home/lucas/Nextcloud/Programming/BackToTheFuture/Code/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/lucas/Nextcloud/Programming/BackToTheFuture/Code/cmake-build-debug/CMakeFiles/PLATFORMIO_CLEAN.dir
+/home/lucas/Nextcloud/Programming/BackToTheFuture/Code/cmake-build-debug/CMakeFiles/PLATFORMIO_PROGRAM.dir
+/home/lucas/Nextcloud/Programming/BackToTheFuture/Code/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/lucas/Nextcloud/Programming/BackToTheFuture/Code/cmake-build-debug/CMakeFiles/PLATFORMIO_UPLOAD.dir
+/home/lucas/Nextcloud/Programming/BackToTheFuture/Code/cmake-build-debug/CMakeFiles/PLATFORMIO_BUILD.dir
+/home/lucas/Nextcloud/Programming/BackToTheFuture/Code/cmake-build-debug/CMakeFiles/PLATFORMIO_TEST.dir
+/home/lucas/Nextcloud/Programming/BackToTheFuture/Code/cmake-build-debug/CMakeFiles/PLATFORMIO_UPLOADFS.dir
+/home/lucas/Nextcloud/Programming/BackToTheFuture/Code/cmake-build-debug/CMakeFiles/PLATFORMIO_REBUILD_PROJECT_INDEX.dir
+/home/lucas/Nextcloud/Programming/BackToTheFuture/Code/cmake-build-debug/CMakeFiles/PLATFORMIO_UPDATE_ALL.dir
+/home/lucas/Nextcloud/Programming/BackToTheFuture/Code/cmake-build-debug/CMakeFiles/Code.dir
