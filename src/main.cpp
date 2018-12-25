@@ -1,55 +1,59 @@
 #include <Arduino.h>
-#include <TM1637Display.h>
+#include <NTPClient.h>
+#include <ESP8266WiFi.h>
+#include <WiFiUdp.h>
 
-// Module connection pins (Digital Pins)
-#define CLK 10
-#define DIO_D1 9
-#define DIO_D2 8
-#define DIO_D3 7
 
-// The amount of time (in milliseconds) between tests
-#define TEST_DELAY   500
+#include "Clock.h"
+#include "State.h"
+#include "Display.h"
 
-TM1637Display disp1(CLK, DIO_D1);
-TM1637Display disp2(CLK, DIO_D2);
-TM1637Display disp3(CLK, DIO_D3);
+const char *ssid     = "OpenWRT2";
+const char *password = "DF7E565ADE3F";
 
-TM1637Display displays[] {disp1, disp2, disp3 };
+
+WiFiUDP ntpUDP;
+
+// By default 'pool.ntp.org' is used with 60 seconds update interval and
+// no offset
+NTPClient timeClient(ntpUDP);
+
+Display display;
 
 void setup()
 {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+
+  while ( WiFi.status() != WL_CONNECTED ) {
+    delay ( 500 );
+    Serial.print ( "." );
+  }
+
+  timeClient.begin();
 }
 
-void DoFor(uint8_t d){
-
-  int k;
-  uint8_t data[] = { 0xff, 0xff, 0xff, 0xff };
-  uint8_t blank[] = { 0x00, 0x00, 0x00, 0x00 };
-
-  TM1637Display disp = displays[d];
-  
-  disp.setBrightness(0x0f);
-  // All segments on
-  delay(TEST_DELAY);
-  // Selectively set different digits
-  data[0] = disp.encodeDigit(0);
-  data[1] = disp.encodeDigit(1);
-  data[2] = disp.encodeDigit(2);
-  data[3] = disp.encodeDigit(3);
-  disp.setSegments(data);
-    
-  delay(TEST_DELAY);
-  
-	// Run through all the dots
-	for(k=0; k <= 4; k++) {
-		disp.showNumberDecEx(0, (0x80 >> k), true);
-		delay(TEST_DELAY);
-	}
-}
+uint8_t br = 0;
 
 void loop()
 {
-  for (uint8_t i = 0; i < 3; i++){
-    DoFor(i);
-  }
+  // show message
+
+  // show time
+
+  // show status
+
+  // Update user defined stuff
+
+  timeClient.update();
+
+  int t = timeClient.getMinutes() + timeClient.getHours() * 100;
+  display.setTime(t, LEFT_DISP);
+
+  display.setNumber(timeClient.getSeconds(), RIGHT_DIS);
+
+  display.setBrightness(br);
+
+  delay(1000);
+
 }

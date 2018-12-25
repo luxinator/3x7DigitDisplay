@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(Code)
+project(3x7DigitDisplay)
 
 include(CMakeListsPrivate.txt)
 
