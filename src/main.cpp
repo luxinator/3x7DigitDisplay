@@ -2,7 +2,7 @@
 #include <NTPClient.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
-
+#include <EEPROM.h>
 
 #include "Clock.h"
 #include "State.h"
@@ -23,6 +23,12 @@ Display display;
 void setup()
 {
   Serial.begin(115200);
+  Serial.println("Reading Wifi credentials from storage");
+
+  EEPROM.re
+
+
+
   WiFi.begin(ssid, password);
 
   while ( WiFi.status() != WL_CONNECTED ) {
@@ -31,6 +37,7 @@ void setup()
   }
 
   timeClient.begin();
+
 }
 
 uint8_t br = 0;
