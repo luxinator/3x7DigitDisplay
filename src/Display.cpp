@@ -19,32 +19,39 @@ void Display::setBrightness(uint8_t v) {
 };
 
 void Display::setTime(int time, int d) {
-  displays[d].showNumberDecEx(time, 0b01000000);
+  if(d >= 0 && d < 4)
+    displays[d].showNumberDecEx(time, 0b01000000);
+
 }
 
 void Display::setNumber(int n, int d) {
-  displays[d].showNumberDecEx(n);
+  if(d >= 0 && d < 4)
+    displays[d].showNumberDecEx(n);
 }
 
 void Display::showDone(int d) {
-  displays[d].setSegments(SEG_DONE);
+  if(d >= 0 && d < 4)
+    displays[d].setSegments(SEG_DONE);
 }
 
 void Display::showConn(int d) {
-  displays[d].setSegments(CONN);
+  if(d >= 0 && d < 4)
+    displays[d].setSegments(CONN);
 }
 
 void Display::toggleSpinner(int d) {
-  if (segs[0] == 0) {
-    segs[0] = SEG_A;
-    segs[1] = SEG_B;
-    segs[2] = SEG_C;
-    segs[3] = SEG_D;
-  }
-  segs[0] = segs[0] << 1;
-  segs[1] = segs[1] << 1;
-  segs[2] = segs[2] << 1;
-  segs[3] = segs[3] << 1;
+  if(d >= 0 && d < 4) {
+    if (segs[0] == 0) {
+      segs[0] = SEG_A;
+      segs[1] = SEG_B;
+      segs[2] = SEG_C;
+      segs[3] = SEG_D;
+    }
+    segs[0] = segs[0] << 1;
+    segs[1] = segs[1] << 1;
+    segs[2] = segs[2] << 1;
+    segs[3] = segs[3] << 1;
 
-  displays[d].setSegments(segs);
+    displays[d].setSegments(segs);
+  }
 }
