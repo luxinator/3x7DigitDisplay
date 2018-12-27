@@ -41,9 +41,6 @@ char *StorageManager::getSSID() {
   while (EEPROM.read(i) != SEPERATOR && i < MAX_ADDR) {
     i++;
   }
-
-  Serial.printf("SSID Size: %d\n", i - CREDN_BASE_ADDR);
-
   if (i >= MAX_ADDR) {
     return nullptr;
   }
@@ -51,9 +48,8 @@ char *StorageManager::getSSID() {
   size_t endAddr = i;
   for (i = CREDN_BASE_ADDR; i < endAddr; i++) {
     ssid[i - CREDN_BASE_ADDR] = EEPROM.read(i);
-    Serial.print(ssid[i - CREDN_BASE_ADDR]);
   }
-  Serial.print('\n');
+
   return ssid;
 }
 
@@ -92,8 +88,6 @@ char *StorageManager::getPass() {
     i++;
   }
 
-  Serial.printf("Password Size: %d\n", i - pass_begin);
-
   if (i >= MAX_ADDR) {
     return nullptr;
   }
@@ -102,8 +96,6 @@ char *StorageManager::getPass() {
 
   for (i = pass_begin; i < endAddr; i++) {
     pass[i - pass_begin] = EEPROM.read(i);
-    Serial.print(pass[i - pass_begin]);
   }
-  Serial.print('\n');
   return pass;
 }

@@ -11,9 +11,6 @@
 #include "Display.h"
 #include "StorageManager.h"
 
-char ssid[] = "OpenWRT2";
-char password[] = "DF7E565ADE3F";
-
 WiFiUDP ntpUDP;
 
 // By default 'pool.ntp.org' is used with 60 seconds update interval and
@@ -28,69 +25,68 @@ StorageManager storageManager;
 
 uint8_t brightness;
 
+void wifiLoop() {
+  display.showConn(0);
+
+  while (true) {
+    Serial.println("Getting SSID and Password from storage");
+    display.showConn(0);
+
+    char *ssid = storageManager.getSSID();
+    char *password = storageManager.getPass();
+
+    if (ssid != nullptr && password != nullptr) {
+
+      Serial.printf("Trying: %s", ssid);
+
+      WiFi.begin(ssid, password);
+
+      int retryCount = 0;
+
+      while (WiFi.status() != WL_CONNECTED && retryCount < 15) {
+        delay(500);
+        Serial.print(".");
+        display.toggleSpinner(2);
+        retryCount++;
+      }
+
+      if (WiFi.status() == WL_CONNECTED) {
+        Serial.println("Connected");
+        return;
+      }
+    }
+    // TODO: switch to station mode
+
+  }
+}
+
 void setup() {
   Serial.begin(115200);
+  Serial.println();
 
+  wifiLoop();
 
-//  storageManager.storeDisplayState(&state);
-
-  storageManager.storeWifiCredentials(ssid, password);
-  char *ssid2 = storageManager.getSSID();
-  char *pass2 = storageManager.getPass();
-  if (ssid2 == nullptr || pass2 == nullptr){
-    Serial.println("FAILURE");
-  }
-  else {
-    for (size_t i = 0; i < strlen(ssid); ++i) {
-      Serial.printf("SSID: %c, ssid2: %c\n", ssid[i], ssid2[i]);
-    }
-    for (size_t i = 0; i < strlen(password); ++i) {
-      Serial.printf("pass: %c, pass2: %c\n", password[i], pass2[i]);
-    }
-  }
-
-  WiFi.begin(ssid, password);
-
-  display.showConn(0);
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    display.toggleSpinner(2);
-  }
+  storageManager.getDisplayState(&state);
 
   timeClient.begin();
-  display.showConn(0);
-  brightness = 5;
 }
 
 void loop() {
-  // show message
-
-  // show time
-
-  // show status
-
-  // Update user defined stuff
-
 
   //Read state set displays
-
-
-
   display.setBrightness(state.brightnes);
 
+  // Time stuff:
   timeClient.update();
   timeClient.setTimeOffset(state.time_correction);
   time_t time = timeClient.getEpochTime();
 
-  int t = hour(time) * 100 + minute(time);  // timeClient.getMinutes() + timeClient.getHours() * 100;
+  int t = hour(time) * 100 + minute(time);
 
   display.setTime(t, state.TimeDispl);
   display.setNumber(second(time), state.SecsDispl);
   display.setTime(month(time) * 100 + day(time), state.DateDispl);
   display.setNumber(year(time), state.YearDispl);
 
-  delay(500);
-
+  delay(450);
 }
