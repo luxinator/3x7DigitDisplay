@@ -15,9 +15,9 @@
 
 // Module connection pins (Digital Pins)
 #define CLK 4
-#define DIO_D3 5
+#define DIO_D3 12
 #define DIO_D1 14
-#define DIO_D2 12
+#define DIO_D2 5
 
 const uint8_t SEG_DONE[] = {
     SEG_B | SEG_C | SEG_D | SEG_E | SEG_G,           // d

@@ -12,13 +12,14 @@ class State {
 
  public:
 
-  bool ShowStatus;
+  uint8_t TimeDispl = 1;
 
-  bool ShowTime;
+  uint8_t SecDispl = 2;
 
-  bool ShowMessage;
+  uint8_t DateDispl = 0;
 
-  String message;
+  uint8_t YearDispl = 4;
 
+  uint8_t brightnes = 0x06;
 };
 #endif //INC_3X7DIGITDISPLAY_STATE_H

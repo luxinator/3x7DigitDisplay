@@ -3,6 +3,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include <EEPROM.h>
+#include <Time.h>
 
 #include "Clock.h"
 #include "State.h"
@@ -20,27 +21,29 @@ NTPClient timeClient(ntpUDP);
 
 Display display;
 
+State state;
+
+uint8_t brightness;
+
 void setup()
 {
   Serial.begin(115200);
   Serial.println("Reading Wifi credentials from storage");
 
-  EEPROM.re
-
-
-
   WiFi.begin(ssid, password);
+
+  display.showConn(0);
 
   while ( WiFi.status() != WL_CONNECTED ) {
     delay ( 500 );
     Serial.print ( "." );
+    display.toggleSpinner(2);
   }
 
   timeClient.begin();
-
+  display.showConn(0);
+  brightness = 5;
 }
-
-uint8_t br = 0;
 
 void loop()
 {
@@ -52,14 +55,21 @@ void loop()
 
   // Update user defined stuff
 
+
+  //Read state set displays
+
+
+
+  display.setBrightness(state.brightnes);
+
   timeClient.update();
+  time_t time = timeClient.getEpochTime();
 
-  int t = timeClient.getMinutes() + timeClient.getHours() * 100;
-  display.setTime(t, LEFT_DISP);
-
-  display.setNumber(timeClient.getSeconds(), RIGHT_DIS);
-
-  display.setBrightness(br);
+  int t = hour(time) * 100 + minute(time);  // timeClient.getMinutes() + timeClient.getHours() * 100;
+  display.setTime(t, state.TimeDispl);
+  display.setNumber(second(time), state.SecDispl);
+  display.setTime(month(time) * 100 + day(time), state.DateDispl);
+  display.setNumber(year(time), state.YearDispl);
 
   delay(1000);
 
