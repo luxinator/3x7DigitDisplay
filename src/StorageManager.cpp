@@ -9,9 +9,9 @@ bool StorageManager::storeWifiCredentials(const char *SSID, const char *pass) {
   Serial.println("\nStoring SSID and Pass to EEPROM");
 
   size_t j = CREDN_BASE_ADDR;
-
+  size_t maxRange = CREDN_BASE_ADDR + strlen(SSID) + strlen(pass) + 2;
   // cannot store strings to long
-  if (CREDN_BASE_ADDR + strlen(SSID) + strlen(pass) + 2 > MAX_ADDR) {
+  if (maxRange > MAX_ADDR) {
     return false;
   }
 
@@ -19,18 +19,13 @@ bool StorageManager::storeWifiCredentials(const char *SSID, const char *pass) {
   for (; j < range; ++j) {
     auto c = (uint8_t) SSID[j - CREDN_BASE_ADDR];
     EEPROM.write(j, c);
-    Serial.print(SSID[j - CREDN_BASE_ADDR]);
   }
   EEPROM.write(j, SEPERATOR);
   j++;
-  Serial.println();
 
-  range = CREDN_BASE_ADDR + strlen(SSID) + strlen(pass);
-  for (; j < range; ++j) {
-    EEPROM.write(j, (uint8_t) pass[j - (CREDN_BASE_ADDR + strlen(SSID))]);
-    Serial.print(pass[j - (CREDN_BASE_ADDR + strlen(SSID))]);
+  for (; j < maxRange; ++j) {
+    EEPROM.write(j, (uint8_t) pass[j - (CREDN_BASE_ADDR + strlen(SSID) + 1)]);
   }
-  Serial.println();
   EEPROM.write(j, SEPERATOR);
 
   EEPROM.commit();
@@ -41,13 +36,9 @@ bool StorageManager::storeWifiCredentials(const char *SSID, const char *pass) {
 
 char *StorageManager::getSSID() {
   size_t i = CREDN_BASE_ADDR;
-  Serial.printf("CREDN_BASE_ADDR: %d\n",i);
 
   //get size of ssid:
-  char c = ' ';
-  while (c != SEPERATOR && i < MAX_ADDR) {
-    c = EEPROM.read(i);
-    Serial.print(c);
+  while (EEPROM.read(i) != SEPERATOR && i < MAX_ADDR) {
     i++;
   }
 
@@ -86,4 +77,33 @@ void StorageManager::getDisplayState(State *state) {
 
 StorageManager::StorageManager() {
   EEPROM.begin(512);
+}
+char *StorageManager::getPass() {
+  size_t i = CREDN_BASE_ADDR;
+
+  //get size of ssid:
+  while (EEPROM.read(i) != SEPERATOR && i < MAX_ADDR) {
+    i++;
+  }
+  i++;
+
+  size_t pass_begin = i;
+  while (EEPROM.read(i) != SEPERATOR && i < MAX_ADDR) {
+    i++;
+  }
+
+  Serial.printf("Password Size: %d\n", i - pass_begin);
+
+  if (i >= MAX_ADDR) {
+    return nullptr;
+  }
+  char *pass = new char[i - pass_begin];
+  size_t endAddr = i;
+
+  for (i = pass_begin; i < endAddr; i++) {
+    pass[i - pass_begin] = EEPROM.read(i);
+    Serial.print(pass[i - pass_begin]);
+  }
+  Serial.print('\n');
+  return pass;
 }

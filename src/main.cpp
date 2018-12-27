@@ -36,12 +36,16 @@ void setup() {
 
   storageManager.storeWifiCredentials(ssid, password);
   char *ssid2 = storageManager.getSSID();
-  if (ssid2 == nullptr){
+  char *pass2 = storageManager.getPass();
+  if (ssid2 == nullptr || pass2 == nullptr){
     Serial.println("FAILURE");
   }
   else {
     for (size_t i = 0; i < strlen(ssid); ++i) {
       Serial.printf("SSID: %c, ssid2: %c\n", ssid[i], ssid2[i]);
+    }
+    for (size_t i = 0; i < strlen(password); ++i) {
+      Serial.printf("pass: %c, pass2: %c\n", password[i], pass2[i]);
     }
   }
 
