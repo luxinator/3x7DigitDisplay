@@ -32,9 +32,9 @@ class StorageManager {
 
   char* getPass();
 
-  void storeDisplayState(const State *state);
+  void storeDisplayState(const State state);
 
-  void getDisplayState(State *state);
+  void getDisplayState(State state);
 
 };
 

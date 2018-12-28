@@ -33,6 +33,13 @@ const uint8_t CONN[] = {
     SEG_C | SEG_E | SEG_G,                          // n
 };
 
+const uint8_t AP[] = {
+    SEG_A | SEG_B | SEG_C | SEG_E | SEG_F | SEG_G,  // A
+    SEG_A | SEG_B | SEG_E | SEG_F | SEG_G,          // P
+    0,
+    0
+};
+
 
 class Display{
 
@@ -70,6 +77,8 @@ class Display{
   void setBrightness(uint8_t value);
 
   void showDone(int display);
+
+  void showAP(int display);
 
   void showConn(int display);
 

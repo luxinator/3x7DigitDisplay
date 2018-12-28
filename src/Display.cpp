@@ -55,3 +55,6 @@ void Display::toggleSpinner(int d) {
     displays[d].setSegments(segs);
   }
 }
+void Display::showAP(int display) {
+  displays[display].setSegments(AP);
+}

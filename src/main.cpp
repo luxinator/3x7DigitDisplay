@@ -32,8 +32,8 @@ void wifiLoop() {
     Serial.println("Getting SSID and Password from storage");
     display.showConn(0);
 
-    char *ssid = storageManager.getSSID();
-    char *password = storageManager.getPass();
+    ssid = storageManager.getSSID();
+    password = storageManager.getPass();
 
     if (ssid != nullptr && password != nullptr) {
 
@@ -52,10 +52,17 @@ void wifiLoop() {
 
       if (WiFi.status() == WL_CONNECTED) {
         Serial.println("Connected");
+        Serial.print("IP: ");
+        Serial.println(WiFi.localIP());
         return;
       }
     }
-    // TODO: switch to station mode
+
+    // TODO: switch to ap mode
+    Serial.println("Changing to AP mode");
+    bool ap = WiFi.softAP("CLOCK_AP", "CLOCK_AP");
+    Serial.println(WiFi.softAPIP());
+    display.showAP(MIDDLE_DI);
 
   }
 }
@@ -64,11 +71,17 @@ void setup() {
   Serial.begin(115200);
   Serial.println();
 
+  //TODO: Remove when AP mode works
+  storageManager.storeWifiCredentials("OpenWRT2", "DF7E565ADE3F");
+  storageManager.storeDisplayState(state);
+
   wifiLoop();
 
-  storageManager.getDisplayState(&state);
+  storageManager.getDisplayState(state);
 
   timeClient.begin();
+  Serial.println("Starting Loop");
+
 }
 
 void loop() {

@@ -1,0 +1,12 @@
+//
+// Created by lucas on 12/27/18.
+//
+
+#ifndef INC_3X7DIGITDISPLAY_WEBSERVER_H
+#define INC_3X7DIGITDISPLAY_WEBSERVER_H
+
+class WebServer {
+
+};
+
+#endif //INC_3X7DIGITDISPLAY_WEBSERVER_H

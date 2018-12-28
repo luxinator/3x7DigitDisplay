@@ -53,22 +53,22 @@ char *StorageManager::getSSID() {
   return ssid;
 }
 
-void StorageManager::storeDisplayState(const State *state) {
-  EEPROM.write(STATE_BASE_ADDR, state->YearDispl);
-  EEPROM.write(STATE_BASE_ADDR + 1, state->DateDispl);
-  EEPROM.write(STATE_BASE_ADDR + 2, state->SecsDispl);
-  EEPROM.write(STATE_BASE_ADDR + 3, state->brightnes);
-  EEPROM.write(STATE_BASE_ADDR + 4, state->TimeDispl);
-  EEPROM.write(STATE_BASE_ADDR + 5, state->time_correction);
+void StorageManager::storeDisplayState(const State state) {
+  EEPROM.write(STATE_BASE_ADDR, state.YearDispl);
+  EEPROM.write(STATE_BASE_ADDR + 1, state.DateDispl);
+  EEPROM.write(STATE_BASE_ADDR + 2, state.SecsDispl);
+  EEPROM.write(STATE_BASE_ADDR + 3, state.brightnes);
+  EEPROM.write(STATE_BASE_ADDR + 4, state.TimeDispl);
+  EEPROM.write(STATE_BASE_ADDR + 5, state.time_correction);
 }
 
-void StorageManager::getDisplayState(State *state) {
-  state->YearDispl = EEPROM.read(STATE_BASE_ADDR);
-  state->DateDispl = EEPROM.read(STATE_BASE_ADDR + 1);
-  state->SecsDispl = EEPROM.read(STATE_BASE_ADDR + 2);
-  state->brightnes = EEPROM.read(STATE_BASE_ADDR + 3);
-  state->TimeDispl = EEPROM.read(STATE_BASE_ADDR + 4);
-  state->time_correction = EEPROM.read(STATE_BASE_ADDR + 5);
+void StorageManager::getDisplayState(State state) {
+  state.YearDispl = EEPROM.read(STATE_BASE_ADDR);
+  state.DateDispl = EEPROM.read(STATE_BASE_ADDR + 1);
+  state.SecsDispl = EEPROM.read(STATE_BASE_ADDR + 2);
+  state.brightnes = EEPROM.read(STATE_BASE_ADDR + 3);
+  state.TimeDispl = EEPROM.read(STATE_BASE_ADDR + 4);
+  state.time_correction = EEPROM.read(STATE_BASE_ADDR + 5);
 }
 
 StorageManager::StorageManager() {
