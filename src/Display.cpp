@@ -20,7 +20,7 @@ void Display::setBrightness(uint8_t v) {
 
 void Display::setTime(int time, int d) {
   if(d >= 0 && d < 4)
-    displays[d].showNumberDecEx(time, 0b01000000);
+    displays[d].showNumberDecEx(time, 0b01000000, true);
 
 }
 

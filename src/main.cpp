@@ -7,23 +7,21 @@
 #include <SPISlave.h>
 
 #include "Clock.h"
-#include "State.h"
 #include "Display.h"
 #include "StorageManager.h"
+#include "WebServer.h"
 
 WiFiUDP ntpUDP;
 
-// By default 'pool.ntp.org' is used with 60 seconds update interval and
-// no offset
 NTPClient timeClient(ntpUDP);
 
 Display display;
 
-State state;
-
 StorageManager storageManager;
 
-uint8_t brightness;
+WifiConfig wifiConfig;
+
+State state;
 
 void wifiLoop() {
   display.showConn(0);
@@ -32,14 +30,14 @@ void wifiLoop() {
     Serial.println("Getting SSID and Password from storage");
     display.showConn(0);
 
-    ssid = storageManager.getSSID();
-    password = storageManager.getPass();
+    wifiConfig.setPassword(storageManager.getPass());
+    wifiConfig.setSSID(storageManager.getSSID());
 
-    if (ssid != nullptr && password != nullptr) {
+    if (wifiConfig.getSSID() != nullptr && wifiConfig.getPassword() != nullptr) {
 
-      Serial.printf("Trying: %s", ssid);
+      Serial.printf("Trying: %s", wifiConfig.getSSID());
 
-      WiFi.begin(ssid, password);
+      WiFi.begin(wifiConfig.getSSID(), wifiConfig.getPassword());
 
       int retryCount = 0;
 
@@ -67,6 +65,7 @@ void wifiLoop() {
   }
 }
 
+
 void setup() {
   Serial.begin(115200);
   Serial.println();
@@ -76,6 +75,8 @@ void setup() {
   storageManager.storeDisplayState(state);
 
   wifiLoop();
+
+  registerWebserver(&state, &wifiConfig, &storageManager);
 
   storageManager.getDisplayState(state);
 
@@ -91,15 +92,16 @@ void loop() {
 
   // Time stuff:
   timeClient.update();
-  timeClient.setTimeOffset(state.time_correction);
   time_t time = timeClient.getEpochTime();
 
-  int t = hour(time) * 100 + minute(time);
+  int t = hour(time + 3600 * state.time_correction)* 100 + minute(time);
 
   display.setTime(t, state.TimeDispl);
   display.setNumber(second(time), state.SecsDispl);
   display.setTime(month(time) * 100 + day(time), state.DateDispl);
   display.setNumber(year(time), state.YearDispl);
+
+  handleIncomingClients();
 
   delay(450);
 }

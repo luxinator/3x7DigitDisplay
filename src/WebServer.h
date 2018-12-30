@@ -5,8 +5,24 @@
 #ifndef INC_3X7DIGITDISPLAY_WEBSERVER_H
 #define INC_3X7DIGITDISPLAY_WEBSERVER_H
 
-class WebServer {
+#include <ESP8266WebServer.h>
+#include "State.h"
+#include "WifiConfig.h"
+#include "StorageManager.h"
+/**
+ * Defines the callbacks for the webserver
+ */
 
-};
+
+
+/**
+ * The ESP8266WebServer register callbacks of type func<void(void)>
+ * so the WebServer.cpp registers these callbacks.
+ * @param s
+ * @param config
+ */
+void registerWebserver(State *s, WifiConfig *config, StorageManager *storageManager);
+
+void handleIncomingClients();
 
 #endif //INC_3X7DIGITDISPLAY_WEBSERVER_H
