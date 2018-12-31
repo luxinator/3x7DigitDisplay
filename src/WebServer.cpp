@@ -22,35 +22,46 @@ void serverHome() {
       + "<html><body>"
       + " <form action=\"/\" method=\"post\">\n"
       + "  <div>\n"
-      + "   <label>TimeCorrection</label>\n"
+      + "   <label>TimeCorrection:</label>\n"
       + R"( <input name="TimeCorrection" type="number" min="-12" max="12" value=")"
       + String(local_state->time_correction) + "\">\n "
       + "  </div>\n "
       + "  <div>\n"
-      + "   <label>Time Displayed on</label>\n"
+      + "   <label>Time Displayed on:</label>\n"
       + R"( <input name="TimeDispl" type="number" "min="0" max="10" value=")"
       + String(local_state->TimeDispl) + "\">\n "
       + "  </div>\n "
       + "  <div>\n"
-      + "   <label>Seconds Displayed on</label>\n"
+      + "   <label>Seconds Displayed on:</label>\n"
       + R"( <input name="SecsDispl" type="number" min="0" max="10" value=")"
       + String(local_state->SecsDispl) + "\">\n"
       + "  </div>\n"
       + "  <div>\n"
-      + "   <label>Date Displayed on</label>\n"
+      + "   <label>Date Displayed on:</label>\n"
       + R"( <input name="DateDispl" type="number" min="0" max="10" value=")"
       + String(local_state->DateDispl) + "\">\n"
       + "  </div>\n "
       + "  <div>\n"
-      + "   <label>Year Displayed on</label>\n"
+      + "   <label>Year Displayed on:</label>\n"
       + R"( <input name="YearDispl" type="number" min="0" max="10" value=")"
       + String(local_state->YearDispl) + "\">\n"
       + "  </div>\n "
       + "  <div>\n"
-      + "   <label>Display Brightness</label>\n"
+      + "   <label>Display Brightness:</label>\n"
       + R"( <input name="brightnes" type="number" min="0" max="16" value=")"
       + String(local_state->brightnes) + "\">\n"
       + "  </div>\n "
+
+      + "  <div>\n"
+      + "   <label>WiFi SSID:</label>\n"
+      + R"( <input name="ssid" type="text" value=")"
+      + local_wifiConfig->getSSID() + "\">\n"
+      + "  </div>\n "
+      + "  <div>\n"
+      + "   <label>WiFi Password:</label>\n"
+      + R"( <input name="pass" type="password" value=""\>)" + "\n"
+      + "  </div>\n "
+
       + R"(<button type="submit">Submit</button>)"
       + " </form>"
       + "</body></html>";
@@ -93,14 +104,28 @@ void handlePost() {
                 local_state->brightnes,
                 local_state->time_correction);
 
+  if (server.hasArg("ssid") && server.hasArg("pass")) {
+    String ssid = server.arg("ssid");
+    String pass = server.arg("pass");
+
+    if (ssid.length() > 0 && pass.length() > 0){
+      Serial.printf("ssid: %s, pass: %s\n", ssid.c_str(), pass.c_str());
+      char *ssid_cp = nullptr;
+      char * pass_cp= nullptr;
+      strcpy(ssid_cp, ssid.c_str());
+      strcpy(pass_cp, pass.c_str());
+      local_wifiConfig->setSSID(ssid_cp);
+      local_wifiConfig->setPassword(pass_cp);
+    }
+  }
+
   serverHome();
 }
 
-void registerWebserver(State *s, WifiConfig *config, StorageManager *storageManager) {
+void registerWebserver(State *s, WifiConfig *config) {
 
   local_state = s;
   local_wifiConfig = config;
-  local_store = storageManager;
 
   server.on("/", HTTP_GET, serverHome);
   server.on("/", HTTP_POST, handlePost);

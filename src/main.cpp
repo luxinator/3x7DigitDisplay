@@ -76,7 +76,7 @@ void setup() {
 
   wifiLoop();
 
-  registerWebserver(&state, &wifiConfig, &storageManager);
+  registerWebserver(&state, &wifiConfig);
 
   storageManager.getDisplayState(state);
 

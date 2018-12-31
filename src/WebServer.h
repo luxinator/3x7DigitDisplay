@@ -21,7 +21,7 @@
  * @param s
  * @param config
  */
-void registerWebserver(State *s, WifiConfig *config, StorageManager *storageManager);
+void registerWebserver(State *state, WifiConfig *wifiConfig);
 
 void handleIncomingClients();
 

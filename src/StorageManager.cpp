@@ -49,7 +49,6 @@ char *StorageManager::getSSID() {
   for (i = CREDN_BASE_ADDR; i < endAddr; i++) {
     ssid[i - CREDN_BASE_ADDR] = EEPROM.read(i);
   }
-
   return ssid;
 }
 

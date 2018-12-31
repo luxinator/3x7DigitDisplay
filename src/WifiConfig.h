@@ -12,26 +12,39 @@ class WifiConfig {
   char *ssid;
   char *password;
 
+
  public:
   void setSSID(char *new_ssid) {
-    delete ssid;
-    this->ssid = new_ssid;
+    if (ssid == nullptr) {
+      ssid = new_ssid;
+    } else if (strcmp(ssid, new_ssid) != 0) {
+      delete ssid;
+      this->ssid = new_ssid;
+    } else {
+      delete new_ssid;
+    }
   }
 
   void setPassword(char *new_password) {
-    delete password;
-    this->password = new_password;
+    if (password == nullptr) {
+      password = new_password;
+    } else if (strcmp(password, new_password) != 0) {
+      delete password;
+      this->password = new_password;
+    } else {
+      delete new_password;
+    }
   }
 
   char *getSSID() {
     return ssid;
   }
 
-  char *getPassword(){
+  char *getPassword() {
     return password;
   }
 
-  ~WifiConfig(){
+  ~WifiConfig() {
     delete ssid;
     delete password;
   }
